@@ -322,13 +322,13 @@ struct Index{
           })
           GridItem(){
             Column(){
-              Image($r('app.media.translate'))
+              Image($r('app.media.network'))
                 .width(50)
                 .height(50)
                 .margin({
                   bottom: "10vp"
                 })
-              Text("翻译")
+              Text("网络")
             }
           }
           .border({
@@ -340,6 +340,12 @@ struct Index{
             right: "20vp",
             bottom: "20vp",
             top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("网络")
+            router.pushUrl({
+              url: 'pages/Networkinfo'
+            })
           })
         }
         .width("100%")

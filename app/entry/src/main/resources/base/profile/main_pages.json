@@ -5,6 +5,7 @@
     "pages/LoginpagesView",
     "pages/RegisterpagesView",
     "pages/Deviceinfo",
-    "pages/Translate"
+    "pages/Translate",
+    "pages/Networkinfo"
   ]
 }
