@@ -52,6 +52,12 @@
       {
         "name": "ohos.permission.INTERNET"
       },
+      {
+        "name":"ohos.permission.GET_NETWORK_INFO",
+      },
+      {
+        "name":"ohos.permission.GET_BUNDLE_INFO",
+      }
     ]
 
   }
