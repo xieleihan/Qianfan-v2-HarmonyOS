@@ -174,7 +174,41 @@ struct Translate{
         right:20,
       })
 
-      
+      Text("每项翻译结果")
+        .fontSize(24)
+        .fontWeight("bold")
+        .fontColor("#182431")
+        .margin({
+          bottom: 10,
+        })
+        .padding({
+          left:20,
+          right:20,
+        })
+
+      Column(){
+        List(){
+          ForEach(this.textArr,(item:string)=>{
+            ListItem(){
+              Text(item)
+            }
+            .width("100%")
+            .height("50vp")
+            .border({
+              width: 1,
+              color: "#182431"
+            })
+          })
+        }
+        .width("100%")
+        .height("100%")
+      }
+      .width("100%")
+      .height("100%")
+      .padding({
+        left:20,
+        right:20,
+      })
 
 
 

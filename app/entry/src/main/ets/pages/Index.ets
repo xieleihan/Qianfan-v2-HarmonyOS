@@ -1,11 +1,20 @@
 import router from '@ohos.router';
 
+interface item{
+  name: string,
+  icon: string,
+  type: string,
+  text: string,
+}
+
 @Entry
 @Component
 
 struct Index{
   @State countIndex: number = 0
   @State inputSms: string = ""
+  @State isOpen:boolean = true
+  @State arrList:Array<item> = []
 
   build() {
     Row(){
@@ -69,6 +78,44 @@ struct Index{
                 })
               }
             }
+            .margin({
+              bottom: "20vp"
+            })
+            Row(){
+              Column(){
+                Row(){
+                  Text("你的小助手")
+                    .fontColor("#ccc")
+                  Image($r('app.media.peacock_flat'))
+                    .width(30)
+                    .height(30)
+                }
+                .width("100%")
+                .justifyContent(FlexAlign.End)
+                Column(){
+                  Text("你好，我是你的小助手，有什么可以帮助你的吗？你好，我是你的小助手，有什么可以帮助你的吗？")
+                    .fontColor(Color.White)
+                }
+                .justifyContent(FlexAlign.Start)
+                .width("260vp")
+                .backgroundColor("#007dfe")
+                .padding({
+                  left: "10vp",
+                  right: "10vp",
+                  top: "10vp",
+                  bottom: "10vp",
+                })
+                .borderRadius({
+                  topLeft:20,
+                  topRight:0,
+                  bottomRight:20,
+                  bottomLeft:20,
+                })
+              }
+            }
+            .margin({
+              bottom: "20vp"
+            })
           }
           .width("100%")
           .height("100%")
@@ -80,12 +127,12 @@ struct Index{
         }
         .width("100%")
         .height("100%")
-        .visibility(this.inputSms === "" ? Visibility.None : Visibility.Visible)
+        .visibility(this.inputSms === "" && this.isOpen === true ? Visibility.None : Visibility.Visible)
 
         Image($r('app.media.AI'))
           .width("90%")
           .height(300)
-          .visibility(this.inputSms === "" ? Visibility.Visible : Visibility.None)
+          .visibility(this.inputSms === "" && this.isOpen === true ? Visibility.Visible : Visibility.None)
 
         Row(){
           TextInput({placeholder: "请输入对话内容"})
@@ -93,6 +140,7 @@ struct Index{
           .height("50vp")
           .onChange((value: string) => {
             this.inputSms = value
+            this.isOpen = false
           })
 
           Button(){
