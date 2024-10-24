@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from httpx_socks import AsyncProxyTransport
 from typing import Optional
+from openai import OpenAI
 
 import httpx
 import pymysql
@@ -31,8 +32,13 @@ AK = os.getenv("AK")
 SK = os.getenv("SK")
 translateappid = os.getenv("translateappid")
 translatepassword = os.getenv("translatepassword")
+deepseek_api_key = os.getenv("deepseek_api_key")
+deepseek_base_url = os.getenv("deepseek_base_url")
 
 print(AK,SK,translateappid,translatepassword)
+
+# 创建深度求索的配置
+client = OpenAI(api_key=deepseek_api_key, base_url=deepseek_base_url)
 
 # 创建 SOCKS 代理传输
 proxy_transport = AsyncProxyTransport.from_url("socks4://192.168.1.1:1080")
@@ -231,7 +237,7 @@ async def proxy_ip():
 # 获取百度 AI 的 Access Token
 async def get_access_token():
     url = f"https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id={AK}&client_secret={SK}"
-    async with httpx.AsyncClient(transport=proxy_transport) as client:
+    async with httpx.AsyncClient(proxies=None) as client:
         response = await client.post(url)
         response_data = response.json()
         if response.status_code == 200 and "access_token" in response_data:
@@ -261,7 +267,7 @@ async def baidu_ai(userMessage: str):
         }
 
         # 发送请求到百度 AI
-        async with httpx.AsyncClient(transport=proxy_transport) as client:
+        async with httpx.AsyncClient(proxies=None) as client:
             response = await client.post(url, headers=headers, json=data)
             if response.status_code == 200:
                 return response.json()
@@ -270,3 +276,29 @@ async def baidu_ai(userMessage: str):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error communicating with the language model: {str(e)}")
+
+# 请求深度求索的模型
+@app.get("/deepseek")
+async def deepseek(userMessage: str):
+    try:
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+
+            messages=[
+                {"role": "user", "content": f"{userMessage}"},
+            ],
+            # 可以调为流式输出
+            stream=False
+        )
+        print(response.choices[0].message.content)
+        if(response != ''):
+            return {"result":response.choices[0].message.content}
+        else:
+            return {"code":404,"message":"没有返回信息"}
+
+    except Exception as e:
+        print(f"Error occurred while fetching data: {str(e)}")
+        return {
+            "code": 500,
+            "message": "ERROR"
+        }

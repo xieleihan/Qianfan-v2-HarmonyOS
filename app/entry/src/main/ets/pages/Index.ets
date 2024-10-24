@@ -1,4 +1,7 @@
 import router from '@ohos.router';
+import http from '@ohos.net.http';
+
+const httpRequest = http.createHttp()
 
 interface item{
   name: string,
@@ -17,7 +20,7 @@ struct Index{
   @State arrList:Array<item> = [
     {
       name:"你的小助手",
-      icon: "$r('app.media.peacock_flat')",
+      icon: "app.media.peacock_flat",
       type: "left",
       text: "你好，我是你的小助手，有什么可以帮助你的吗？你好，我是你的小助手，有什么可以帮助你的吗？"
     }
@@ -52,7 +55,60 @@ struct Index{
       Row(){
 
         Scroll(){
-          Column(){
+          List(){
+            ForEach(this.arrList,(item:item,index)=>{
+              ListItem(){
+                Row(){
+                  Column(){
+                    Row(){
+                      if(item.type === "left"){
+                        Image($r(item.icon))
+                          .width(30)
+                          .height(30)
+                        Text(item.name)
+                          .fontColor("#ccc")
+                      }else{
+                        Text(item.name)
+                          .fontColor("#ccc")
+                        Image($r(item.icon))
+                          .width(30)
+                          .height(30)
+                      }
+                    }
+                    .width("100%")
+                    .justifyContent(item.type === "left" ? FlexAlign.Start : FlexAlign.End)
+                    Column(){
+                      Text(item.text)
+                        .fontColor(Color.White)
+                    }
+                    .justifyContent(FlexAlign.Start)
+                    .width("260vp")
+                    .backgroundColor("#007dfe")
+                    .padding({
+                      left: "10vp",
+                      right: "10vp",
+                      top: "10vp",
+                      bottom: "10vp",
+                    })
+                    .borderRadius(item.type === "left" ? {
+                      topLeft:0,
+                      topRight:20,
+                      bottomRight:20,
+                      bottomLeft:20,
+                    } : {
+                      topLeft:20,
+                      topRight:0,
+                      bottomRight:20,
+                      bottomLeft:20,
+                    })
+                  }
+                }
+                .width("100%")
+                .margin({
+                  bottom: "20vp"
+                })
+              }
+            })
             // Row(){
             //   Column(){
             //     Row(){
@@ -135,6 +191,10 @@ struct Index{
         }
         .width("100%")
         .height("100%")
+        .padding({
+          bottom: "50vp",
+        })
+
         .visibility(this.inputSms === "" && this.isOpen === true ? Visibility.None : Visibility.Visible)
 
         Image($r('app.media.AI'))
@@ -167,6 +227,48 @@ struct Index{
           })
           .onClick(()=>{
             console.log("发送")
+            this.arrList.push({
+              name: "用户名",
+              icon: "app.media.peacock_flat",
+              type: "right",
+              text: this.inputSms
+            })
+
+            httpRequest.request(
+              // 请求url地址
+              'http://localhost:9001/deepseek',
+              {
+                // 请求方式
+                method: http.RequestMethod.GET,
+                // 请求的额外数据。
+                extraData: {
+                  "userMessage": this.inputSms
+                },
+                // 可选，默认为60s
+                connectTimeout: 60000,
+                // 可选，默认为60s
+                readTimeout: 60000,
+                // 开发者根据自身业务需要添加header字段
+                header: {
+                  'Content-Type': 'application/json'
+                }
+              })
+              .then((res) => {
+                let str:string = (res.result) as string;
+                console.log('Result:' + str);
+                let obj:object = JSON.parse(str)
+                str = obj?.['result'];
+                this.arrList.push({
+                  name: "你的小助手",
+                  icon: "app.media.peacock_flat",
+                  type: "left",
+                  text: str
+                })
+              }).catch(() => {
+              console.info('error');
+            });
+
+            this.inputSms = ""
           })
         }
         .width("100%")
