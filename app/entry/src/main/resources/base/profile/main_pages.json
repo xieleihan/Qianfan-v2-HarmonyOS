@@ -3,6 +3,8 @@
     "pages/Index",
     "pages/StartpagesView",
     "pages/LoginpagesView",
-    "pages/RegisterpagesView"
+    "pages/RegisterpagesView",
+    "pages/Deviceinfo",
+    "pages/Translate"
   ]
 }

@@ -1,3 +1,5 @@
+import router from '@ohos.router';
+
 @Entry
 @Component
 
@@ -8,7 +10,7 @@ struct Index{
   build() {
     Row(){
       Row(){
-        Text("千帆大模型"){
+        Text("千帆引擎"){
 
         }
         .fontSize("24vp")
@@ -132,14 +134,71 @@ struct Index{
 
       // 这是功能tab
       Row(){
-        Text("这是功能页面")
+        Grid(){
+          GridItem(){
+            Column(){
+              Image($r('app.media.translate'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("翻译")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("翻译");
+            router.pushUrl({
+              url: 'pages/translate'
+            })
+          })
+          GridItem(){
+            Column(){
+              Image($r('app.media.translate'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("翻译")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+        }
+        .width("100%")
+        .height("100%")
+        .border({
+          width:1,
+          color: "#ccc"
+        })
+        .columnsTemplate('1fr 1fr 1fr')
+        // .rowsTemplate('1fr 1fr 1fr')
       }
       .width("100%")
       .padding({
         left: "20vp",
         right: "20vp",
-        bottom: "50vp",
-        top: "50vp",
+        bottom: "70vp",
+        top: "70vp",
       })
       .height("100%")
       // .opacity(this.countIndex === 0 ? 1 : 0)
@@ -282,6 +341,12 @@ struct Index{
             .border({
               width: {bottom:'1px'},
               color:'#ccc'
+            })
+            .onClick(()=>{
+              console.log("设备详情")
+              router.pushUrl({
+                url: 'pages/Deviceinfo'
+              })
             })
 
             Row(){
