@@ -147,7 +147,7 @@ struct RegisterpagesView {
                 }else{
                   httpRequest.request(
                     // 请求url地址
-                    'https://frp-leg.top:26112/public/register',
+                    'http://localhost:9001/register',
                     {
                       // 请求方式
                       method: http.RequestMethod.POST,

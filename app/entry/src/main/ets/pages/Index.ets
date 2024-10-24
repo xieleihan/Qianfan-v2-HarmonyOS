@@ -159,7 +159,7 @@ struct Index{
           .onClick(()=>{
             console.log("翻译");
             router.pushUrl({
-              url: 'pages/translate'
+              url: 'pages/Translate'
             })
           })
           GridItem(){
