@@ -14,7 +14,14 @@ struct Index{
   @State countIndex: number = 0
   @State inputSms: string = ""
   @State isOpen:boolean = true
-  @State arrList:Array<item> = []
+  @State arrList:Array<item> = [
+    {
+      name:"你的小助手",
+      icon: "$r('app.media.peacock_flat')",
+      type: "left",
+      text: "你好，我是你的小助手，有什么可以帮助你的吗？你好，我是你的小助手，有什么可以帮助你的吗？"
+    }
+  ]
 
   build() {
     Row(){
@@ -46,76 +53,77 @@ struct Index{
 
         Scroll(){
           Column(){
-            Row(){
-              Column(){
-                Row(){
-                  Image($r('app.media.peacock_flat'))
-                    .width(30)
-                    .height(30)
-                  Text("你的小助手")
-                    .fontColor("#ccc")
-                }
-                .width("100%")
-                .justifyContent(FlexAlign.Start)
-                Column(){
-                  Text("你好，我是你的小助手，有什么可以帮助你的吗？你好，我是你的小助手，有什么可以帮助你的吗？")
-                    .fontColor(Color.White)
-                }
-                .justifyContent(FlexAlign.Start)
-                .width("260vp")
-                .backgroundColor("#007dfe")
-                .padding({
-                  left: "10vp",
-                  right: "10vp",
-                  top: "10vp",
-                  bottom: "10vp",
-                })
-                .borderRadius({
-                  topLeft:0,
-                  topRight:20,
-                  bottomRight:20,
-                  bottomLeft:20,
-                })
-              }
-            }
-            .margin({
-              bottom: "20vp"
-            })
-            Row(){
-              Column(){
-                Row(){
-                  Text("你的小助手")
-                    .fontColor("#ccc")
-                  Image($r('app.media.peacock_flat'))
-                    .width(30)
-                    .height(30)
-                }
-                .width("100%")
-                .justifyContent(FlexAlign.End)
-                Column(){
-                  Text("你好，我是你的小助手，有什么可以帮助你的吗？你好，我是你的小助手，有什么可以帮助你的吗？")
-                    .fontColor(Color.White)
-                }
-                .justifyContent(FlexAlign.Start)
-                .width("260vp")
-                .backgroundColor("#007dfe")
-                .padding({
-                  left: "10vp",
-                  right: "10vp",
-                  top: "10vp",
-                  bottom: "10vp",
-                })
-                .borderRadius({
-                  topLeft:20,
-                  topRight:0,
-                  bottomRight:20,
-                  bottomLeft:20,
-                })
-              }
-            }
-            .margin({
-              bottom: "20vp"
-            })
+            // Row(){
+            //   Column(){
+            //     Row(){
+            //       Image($r('app.media.peacock_flat'))
+            //         .width(30)
+            //         .height(30)
+            //       Text("你的小助手")
+            //         .fontColor("#ccc")
+            //     }
+            //     .width("100%")
+            //     .justifyContent(FlexAlign.Start)
+            //     Column(){
+            //       Text("你好，我是你的小助手，有什么可以帮助你的吗？你好，我是你的小助手，有什么可以帮助你的吗？")
+            //         .fontColor(Color.White)
+            //     }
+            //     .justifyContent(FlexAlign.Start)
+            //     .width("260vp")
+            //     .backgroundColor("#007dfe")
+            //     .padding({
+            //       left: "10vp",
+            //       right: "10vp",
+            //       top: "10vp",
+            //       bottom: "10vp",
+            //     })
+            //     .borderRadius({
+            //       topLeft:0,
+            //       topRight:20,
+            //       bottomRight:20,
+            //       bottomLeft:20,
+            //     })
+            //   }
+            // }
+            // .margin({
+            //   bottom: "20vp"
+            // })
+
+            // Row(){
+            //   Column(){
+            //     Row(){
+            //       Text("你的小助手")
+            //         .fontColor("#ccc")
+            //       Image($r('app.media.peacock_flat'))
+            //         .width(30)
+            //         .height(30)
+            //     }
+            //     .width("100%")
+            //     .justifyContent(FlexAlign.End)
+            //     Column(){
+            //       Text("你好，我是你的小助手，有什么可以帮助你的吗？你好，我是你的小助手，有什么可以帮助你的吗？")
+            //         .fontColor(Color.White)
+            //     }
+            //     .justifyContent(FlexAlign.Start)
+            //     .width("260vp")
+            //     .backgroundColor("#007dfe")
+            //     .padding({
+            //       left: "10vp",
+            //       right: "10vp",
+            //       top: "10vp",
+            //       bottom: "10vp",
+            //     })
+            //     .borderRadius({
+            //       topLeft:20,
+            //       topRight:0,
+            //       bottomRight:20,
+            //       bottomLeft:20,
+            //     })
+            //   }
+            // }
+            // .margin({
+            //   bottom: "20vp"
+            // })
           }
           .width("100%")
           .height("100%")
