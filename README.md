@@ -20,22 +20,33 @@
 
 - 前端
 
-	<div align="left">
-		  <img src="https://fastly.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" height="45" alt="TypeScript logo"  />
-		  <img width="6" />
-		</div>
+  <div align="left">
+      <img src="https://fastly.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" height="45" alt="Vuejs logo"  />
+       <img width="6" />
+      <img src="https://fastly.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" height="45" alt="TypeScript logo"  />
+      <img width="6" />
+      <img src="https://pinia.vuejs.org/logo.svg" height="45" alt="pinia logo"  />
+      <img width="6" />
+      <img src="https://nuxt.com/assets/design-kit/logo-green-black.svg" height="45" alt="nuxt logo"  />
+  </div>
 
 - 后端
 
-	<div align="left">
-		  <img src="https://fastly.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="45" alt="Python logo"  />
-		</div>
+  <div align="left">
+  	  <img src="https://fastly.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="45" alt="Python logo"  />
+      <img width="6" />
+      <img src="https://avatars.githubusercontent.com/u/156354296?s=48&v=4" height="45" alt="fastapi logo"  />
+  	</div>
 
 - 数据库
 
 	<div align="left">
 		  <img src="https://fastly.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" height="45" alt="MySQL logo"  />
 		</div>
+	
+- 大语言模型
+
+	`deepseek`
 
 > 鸣谢开源项目`FastAPI`等一系列在本项目中运用到的开源技术的支持者
 
