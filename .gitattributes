@@ -1,1 +1,2 @@
 *.py linguist-language=typescript
+main.py linguist-language=python
