@@ -34,6 +34,7 @@ translateappid = os.getenv("translateappid")
 translatepassword = os.getenv("translatepassword")
 deepseek_api_key = os.getenv("deepseek_api_key")
 deepseek_base_url = os.getenv("deepseek_base_url")
+tianapitranslatekey = os.getenv("tianapitranslatekey")
 
 print(AK,SK,translateappid,translatepassword)
 
@@ -188,6 +189,24 @@ async def proxytranslate(q:str,fromstr:str,to:str):
         # 构建目标 URL
         url = f"https://fanyi-api.baidu.com/api/trans/vip/translate?q={url_encoded_text}&from={fromstr}&to={to}&appid={translateappid}&salt=123456&sign={sign}"
         print("发送的翻译url",url)
+        # 发送请求到目标 URL
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+
+        return {
+            "code": 200,
+            "data": response.json()  # 返回响应的JSON
+        }
+    except Exception as e:
+        print(f"Error occurred while fetching data: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error occurred while fetching data")
+
+# 英汉词典
+@app.get("/proxy/textandtext")
+async def textandtext(query:str):
+    try:
+        url = f"https://apis.tianapi.com/enwords/index?key={tianapitranslatekey}&word={query}"
+
         # 发送请求到目标 URL
         async with httpx.AsyncClient() as client:
             response = await client.get(url)

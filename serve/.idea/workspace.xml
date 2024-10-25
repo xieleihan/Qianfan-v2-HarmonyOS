@@ -57,7 +57,7 @@
 }</component>
   <component name="RunManager">
     <configuration name="serve" type="Python.FastAPI">
-      <option name="additionalOptions" value="--reload --port 9001" />
+      <option name="additionalOptions" value="--reload --port 10089" />
       <option name="file" value="$PROJECT_DIR$/main.py" />
       <module name="serve" />
       <option name="ENV_FILES" value="" />
@@ -93,6 +93,7 @@
       <workItem from="1729739523022" duration="207000" />
       <workItem from="1729739756447" duration="17491000" />
       <workItem from="1729788232280" duration="93000" />
+      <workItem from="1729818350219" duration="4774000" />
     </task>
     <servers />
   </component>
@@ -100,6 +101,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/serve$serve.coverage" NAME="serve 覆盖结果" MODIFIED="1729776998167" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/serve$serve.coverage" NAME="serve 覆盖结果" MODIFIED="1729825681977" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

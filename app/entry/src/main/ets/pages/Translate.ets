@@ -1,5 +1,8 @@
 import { text } from '@kit.ArkGraphics2D'
 import http from '@ohos.net.http';
+import router from '@ohos.router';
+import { pasteboard } from '@kit.BasicServicesKit';
+import { promptAction } from '@kit.ArkUI';
 
 const httpRequest = http.createHttp()
 let debounceTimeoutId: number | null = null;
@@ -104,6 +107,10 @@ struct Translate{
           .width("100%")
           .onChange((value: string) => {
             this.querytext = value
+            if(value === ""){
+              this.textArr = []
+              this.resulttext = ""
+            }
             // 如果已有定时器，则清除它
             if (debounceTimeoutId !== null) {
               clearTimeout(debounceTimeoutId);
@@ -111,7 +118,7 @@ struct Translate{
             debounceTimeoutId = setTimeout(()=>{
               httpRequest.request(
                 // 请求url地址
-                'http://localhost:9001/proxy/translate',
+                'http://localhost:10089/proxy/translate',
                 {
                   // 请求方式
                   method: http.RequestMethod.GET,
@@ -167,7 +174,37 @@ struct Translate{
         })
           .height("100vp")
           .width("100%")
+        Image($r("app.media.copy_template"))
+          .width(25)
+          .height(25)
+          .position({
+            bottom: 10,
+            right: 40,
+          })
+          .onClick(()=>{
+            console.log("点击了复制");
 
+            const pasteboardData =pasteboard.createData(pasteboard.MIMETYPE_TEXT_PLAIN, this.resulttext)
+            const systemPasteboard = pasteboard.getSystemPasteboard()
+            systemPasteboard.setData(pasteboardData) //将数据放入剪切板
+            systemPasteboard.getData().then((data) => {
+              if (data) {
+                promptAction.showToast({ message: "复制成功" })
+              } else {
+                promptAction.showToast({ message: "复制失败" })
+              }
+            })
+          })
+        Image($r('app.media.translate_song'))
+          .width(25)
+          .height(25)
+          .position({
+            bottom: 10,
+            right: 10,
+          })
+          .onClick(()=>{
+            console.log("点击了语音播放");
+          })
       }
       .padding({
         left:20,
@@ -180,6 +217,7 @@ struct Translate{
         .fontColor("#182431")
         .margin({
           bottom: 10,
+          top:10,
         })
         .padding({
           left:20,
@@ -188,9 +226,63 @@ struct Translate{
 
       Column(){
         List(){
+          ListItem(){
+            Column(){
+              Image($r('app.media.noSearch'))
+                .width(250)
+                .height(200)
+                .margin({
+                  bottom: "20vp"
+                })
+              Text("暂无翻译的单词结果")
+                .fontColor("#ccc")
+                .fontSize(14)
+            }
+          }
+          .visibility(this.textArr.length === 0 ? Visibility.Visible : Visibility.None)
+          .width("100%")
+          .height("100%")
+
           ForEach(this.textArr,(item:string)=>{
             ListItem(){
-              Text(item)
+              Row(){
+                Text(item)
+                Image($r('app.media.copy_template'))
+                  .width(25)
+                  .height(25)
+                  .position({
+                    right: 10,
+                    top: "50%",
+                  })
+                  .translate({
+                    y: "-50%"
+                  })
+                  .onClick(()=> {
+                    console.log("点击了小item复制");
+
+                    const pasteboardData = pasteboard.createData(pasteboard.MIMETYPE_TEXT_PLAIN, this.resulttext)
+                    const systemPasteboard = pasteboard.getSystemPasteboard()
+                    systemPasteboard.setData(pasteboardData) //将数据放入剪切板
+                    systemPasteboard.getData().then((data) => {
+                      if (data) {
+                        promptAction.showToast({ message: "复制成功" })
+                      } else {
+                        promptAction.showToast({ message: "复制失败" })
+                      }
+                    })
+                  })
+              }
+              .onClick(()=> {
+                console.log("点击了小item");
+                router.pushUrl({
+                  url: 'pages/TranslateText',
+                  params: {
+                    text: item
+                  }
+                },router.RouterMode.Standard)
+              })
+              .width("100%")
+              .height("50vp")
             }
             .width("100%")
             .height("50vp")
@@ -198,13 +290,17 @@ struct Translate{
               width: 1,
               color: "#182431"
             })
+            .margin({
+              bottom: 10,
+            })
+            .borderRadius(20)
           })
         }
         .width("100%")
         .height("100%")
       }
       .width("100%")
-      .height("100%")
+      .height("400vp")
       .padding({
         left:20,
         right:20,

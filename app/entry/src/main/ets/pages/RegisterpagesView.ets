@@ -147,7 +147,7 @@ struct RegisterpagesView {
                 }else{
                   httpRequest.request(
                     // 请求url地址
-                    'http://localhost:9001/register',
+                    'http://localhost:10089/register',
                     {
                       // 请求方式
                       method: http.RequestMethod.POST,

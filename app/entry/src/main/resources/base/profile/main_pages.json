@@ -6,6 +6,7 @@
     "pages/RegisterpagesView",
     "pages/Deviceinfo",
     "pages/Translate",
-    "pages/Networkinfo"
+    "pages/Networkinfo",
+    "pages/TranslateText"
   ]
 }

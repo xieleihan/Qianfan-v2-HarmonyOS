@@ -236,7 +236,7 @@ struct Index{
 
             httpRequest.request(
               // 请求url地址
-              'http://localhost:9001/deepseek',
+              'http://localhost:10089/deepseek',
               {
                 // 请求方式
                 method: http.RequestMethod.GET,
