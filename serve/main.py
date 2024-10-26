@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends,File, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -35,8 +35,9 @@ translatepassword = os.getenv("translatepassword")
 deepseek_api_key = os.getenv("deepseek_api_key")
 deepseek_base_url = os.getenv("deepseek_base_url")
 tianapitranslatekey = os.getenv("tianapitranslatekey")
+qweather_api_key = os.getenv("qweather_api_key")
 
-print(AK,SK,translateappid,translatepassword)
+print(AK,SK,translateappid,translatepassword,deepseek_api_key,deepseek_base_url,tianapitranslatekey,qweather_api_key)
 
 # 创建深度求索的配置
 client = OpenAI(api_key=deepseek_api_key, base_url=deepseek_base_url)
@@ -251,6 +252,68 @@ async def proxy_ip():
             "message": "ERROR"
         }
 
+# 来源IP查询https://apis.tianapi.com/ipquery/index
+@app.get("/proxy/nginx")
+async def proxy_ip():
+    try:
+        # 获取 IP 信息
+        # 内地：'https://myip.ipip.net/json'
+        # 香港：'https://ipapi.co/json/'
+        url = f'https://apis.tianapi.com/ipquery/index?full=1&key={tianapitranslatekey}'
+
+        # 不使用代理发送请求
+        async with httpx.AsyncClient(proxies=None) as client:
+            response = await client.get(url)
+
+        # 检查请求是否成功
+        if response.status_code == 200:
+            return {
+                "code": 200,
+                "data": response.json()  # 返回 JSON 格式的数据
+            }
+        else:
+            return {
+                "code": response.status_code,
+                "message": "Failed to fetch data"
+            }
+
+    except Exception as e:
+        print(f"Error occurred while fetching data: {str(e)}")
+        return {
+            "code": 500,
+            "message": "ERROR"
+        }
+
+# 获取图片静态资源
+# 天气 https://devapi.qweather.com/v7/weather/24h?{查询参数}  24小时逐小时预报
+@app.get("/proxy/weather")
+async def proxy_weather(location:str):
+    try:
+        print(f"{location}")
+        url = f'https://devapi.qweather.com/v7/weather/24h?key={qweather_api_key}&location={location}'
+
+        # 不使用代理发送请求
+        async with httpx.AsyncClient(proxies=None) as client:
+            response = await client.get(url)
+
+        # 检查请求是否成功
+        if response.status_code == 200:
+            return {
+                "code": 200,
+                "data": response.json()  # 返回 JSON 格式的数据
+            }
+        else:
+            return {
+                "code": response.status_code,
+                "message": "Failed to fetch data"
+            }
+
+    except Exception as e:
+        print(f"Error occurred while fetching data: {str(e)}")
+        return {
+            "code": 500,
+            "message": "ERROR"
+        }
 
 
 # 获取百度 AI 的 Access Token

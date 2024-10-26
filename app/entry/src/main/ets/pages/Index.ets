@@ -1,5 +1,6 @@
 import router from '@ohos.router';
 import http from '@ohos.net.http';
+import { promptAction } from '@kit.ArkUI';
 
 const httpRequest = http.createHttp()
 
@@ -347,6 +348,33 @@ struct Index{
               url: 'pages/Networkinfo'
             })
           })
+          GridItem(){
+            Column(){
+              Image($r('app.media.socks'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("代理")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("代理")
+            router.pushUrl({
+              url: 'pages/Socks'
+            })
+          })
         }
         .width("100%")
         .height("100%")
@@ -548,6 +576,51 @@ struct Index{
           })
           .zIndex(2)
 
+          Column(){
+            Row(){
+              Image($r('app.media.exit'))
+                .width(30)
+                .height(30)
+                .margin({
+                  right: "20vp"
+                })
+              Text("退出登录")
+              Image($r('app.media.chevron_right'))
+                .position({
+                  top: "50%",
+                  right: 0
+                })
+                .translate({
+                  y: "-50%"
+                })
+                .width(15)
+                .height(15)
+            }
+            .width("100%")
+            .height("50vp")
+            .backgroundColor(Color.White)
+            .padding({
+              left: "20vp",
+              right: "20vp",
+            })
+            .border({
+              width: {bottom:'1px'},
+              color:'#ccc'
+            })
+            .onClick(()=>{
+              console.log("退出登录")
+              router.pushUrl({
+                url:'pages/StartpagesView'
+              })
+            })
+          }
+          .position({
+            top: "380vp"
+          })
+          .zIndex(2)
+          .width("100%")
+          .height("30vp")
+
         }
         .alignItems(VerticalAlign.Top)
         .width("100%")
@@ -595,6 +668,31 @@ struct Index{
           Text("产品使命")
             .fontColor("#b3b3b3")
             .fontSize("13vp")
+            .onClick(()=>{
+              console.log("产品使命")
+              AlertDialog.show({
+                title: '产品使命',
+                message: '致力于开发全人类人人都能受益的安全通用人工智能',
+                autoCancel: true,
+                // 设置弹框在底部
+                alignment: DialogAlignment.Bottom,
+                // 设置弹框底部向上移动60
+                offset: { dx: 0, dy: -60 },
+                gridCount: 3,
+
+                confirm: {
+                  value: '确定',
+                  action: () => {
+                    promptAction.showToast({ message: '确定' })
+                  }
+                },
+
+                // 点击遮障层关闭dialog时的回调。
+                cancel: () => {
+                  promptAction.showToast({ message: '取消' })
+                }
+              })
+            })
         }
         .position({
           bottom: "1%",
