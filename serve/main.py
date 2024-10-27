@@ -103,6 +103,38 @@ class LoginRequest(BaseModel):
     useremail: str
     userpassword: str
 
+# 超级管理员注册
+@app.post("/private/register")
+async def register_user(request: RegisterRequest, conn=Depends(get_db_connection)):
+    logging.info(f"Received request data: {request}")
+    cursor = conn.cursor()
+
+    # 检查是否已经存在记录
+    cursor.execute("SELECT * FROM adminuser LIMIT 1")
+    if cursor.fetchone() is not None:
+        raise HTTPException(status_code=400, detail="不可以注册")
+
+    # 加密密码
+    hashed_password = bcrypt.hashpw(request.userpassword.encode('utf-8'), bcrypt.gensalt())
+
+    # 插入新用户
+    try:
+        cursor.execute(
+            "INSERT INTO adminuser (username, useremail, userpassword) "
+            "VALUES (%s, %s, %s)",
+            (request.username, request.useremail, hashed_password)
+        )
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail="注册失败")
+    finally:
+        cursor.close()
+
+    return {"message": "注册成功", "code": 200}
+
+# 超级管理员登录
+
 
 # 用户注册
 @app.post("/register")
