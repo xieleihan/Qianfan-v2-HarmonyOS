@@ -1,0 +1,3 @@
+D:/Documents/Project/Qianfan-v2-HarmonyOS/app/entry/src/main/cpp/CMakeFiles/vpn_client.dir
+D:/Documents/Project/Qianfan-v2-HarmonyOS/app/entry/src/main/cpp/CMakeFiles/ALL_BUILD.dir
+D:/Documents/Project/Qianfan-v2-HarmonyOS/app/entry/src/main/cpp/CMakeFiles/ZERO_CHECK.dir

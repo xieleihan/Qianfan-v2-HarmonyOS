@@ -57,6 +57,9 @@
       },
       {
         "name":"ohos.permission.GET_BUNDLE_INFO",
+      },
+      {
+        "name": "ohos.permission.MANAGE_VPN"
       }
     ]
 

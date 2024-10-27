@@ -8,6 +8,7 @@
     "pages/Translate",
     "pages/Networkinfo",
     "pages/TranslateText",
-    "pages/Socks"
+    "pages/Socks",
+    "pages/Weather"
   ]
 }

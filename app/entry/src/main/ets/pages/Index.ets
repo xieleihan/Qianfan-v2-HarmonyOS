@@ -372,8 +372,42 @@ struct Index{
           .onClick(()=>{
             console.log("代理")
             router.pushUrl({
-              url: 'pages/Socks'
-            })
+              url: 'pages/Socks',
+              params: {
+                text: "代理"
+              }
+            },router.RouterMode.Standard)
+          })
+
+          GridItem(){
+            Column(){
+              Image($r('app.media.qweather'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("天气")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("代理")
+            router.pushUrl({
+              url: 'pages/Weather',
+              params: {
+                text: "天气"
+              }
+            },router.RouterMode.Standard)
           })
         }
         .width("100%")
@@ -658,6 +692,7 @@ struct Index{
         }
         .justifyContent(FlexAlign.Center)
         .width("100%")
+
         Row(){
           Text("联系我们")
             .fontColor("#b3b3b3")

@@ -1,0 +1,10 @@
+^D:\DOCUMENTS\PROJECT\QIANFAN-V2-HARMONYOS\APP\ENTRY\SRC\MAIN\CPP\CMAKEFILES\EAA62B59B677F283ECDF1123B18C4E30\GENERATE.STAMP.RULE
+setlocal
+D:\Cmark\bin\cmake.exe -SD:/Documents/Project/Qianfan-v2-HarmonyOS/app/entry/src/main/cpp -BD:/Documents/Project/Qianfan-v2-HarmonyOS/app/entry/src/main/cpp --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/Documents/Project/Qianfan-v2-HarmonyOS/app/entry/src/main/cpp/XComponent.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

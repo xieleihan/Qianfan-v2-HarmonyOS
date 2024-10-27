@@ -1,6 +1,9 @@
+import router from '@ohos.router';
 @Component
 
 export default  struct MyNavigation{
+
+  @Prop msgtitle:string
 
   @Builder NavigationTitle() {
     Column() {
@@ -41,7 +44,7 @@ export default  struct MyNavigation{
       }
       // .title(this.NavigationTitle)
       .menus(this.NavigationMenus)
-      .title("这是标题")
+      .title(this.msgtitle)
 
     }.width('100%').height('100%').backgroundColor('#F1F3F5')
   }
