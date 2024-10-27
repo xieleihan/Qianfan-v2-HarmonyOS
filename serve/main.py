@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends,File, Response
+from fastapi import FastAPI, HTTPException, Depends, File, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -14,6 +14,7 @@ import os
 import hashlib
 import urllib.parse
 
+
 def get_md5_hash(input_string: str) -> str:
     # 创建md5对象
     md5 = hashlib.md5()
@@ -23,6 +24,7 @@ def get_md5_hash(input_string: str) -> str:
 
     # 获取加密后的十六进制表示
     return md5.hexdigest()
+
 
 # 加载环境变量
 load_dotenv(dotenv_path=".env")
@@ -36,8 +38,11 @@ deepseek_api_key = os.getenv("deepseek_api_key")
 deepseek_base_url = os.getenv("deepseek_base_url")
 tianapitranslatekey = os.getenv("tianapitranslatekey")
 qweather_api_key = os.getenv("qweather_api_key")
+pixabay_api_key = os.getenv("pixabay_api_key")
 
-print(AK,SK,translateappid,translatepassword,deepseek_api_key,deepseek_base_url,tianapitranslatekey,qweather_api_key)
+print(AK, SK, translateappid, translatepassword, deepseek_api_key, deepseek_base_url, tianapitranslatekey,
+      qweather_api_key)
+print(pixabay_api_key)
 
 # 创建深度求索的配置
 client = OpenAI(api_key=deepseek_api_key, base_url=deepseek_base_url)
@@ -45,9 +50,9 @@ client = OpenAI(api_key=deepseek_api_key, base_url=deepseek_base_url)
 # 创建 SOCKS 代理传输
 proxy_transport = AsyncProxyTransport.from_url("socks4://192.168.1.1:1080")
 
+
 # 定义数据库连接的依赖项
 def get_db_connection():
-
     # 创建新的数据库连接
     conn = pymysql.connect(
         host='157.122.209.70',
@@ -64,6 +69,7 @@ def get_db_connection():
         # 请求结束时关闭连接
         conn.close()
 
+
 app = FastAPI()
 
 origins = [
@@ -78,9 +84,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
 
 # 定义请求体的数据模型
 class RegisterRequest(BaseModel):
@@ -90,13 +98,15 @@ class RegisterRequest(BaseModel):
     useravater: str = None  # 可选字段，默认值为 None
     useraddress: str = None  # 可选字段，默认值为 None
 
+
 class LoginRequest(BaseModel):
     useremail: str
     userpassword: str
 
+
 # 用户注册
 @app.post("/register")
-async def register_user(request: RegisterRequest,conn=Depends(get_db_connection)):
+async def register_user(request: RegisterRequest, conn=Depends(get_db_connection)):
     logging.info(f"Received request data: {request}")
     cursor = conn.cursor()
 
@@ -134,11 +144,12 @@ async def register_user(request: RegisterRequest,conn=Depends(get_db_connection)
     finally:
         cursor.close()
 
-    return {"message": "注册成功","code": 200}
+    return {"message": "注册成功", "code": 200}
+
 
 # 用户登录
 @app.post("/login")
-async def login_user(request: LoginRequest,conn=Depends(get_db_connection)):
+async def login_user(request: LoginRequest, conn=Depends(get_db_connection)):
     cursor = conn.cursor()
 
     # 检查用户名是否存在
@@ -155,7 +166,8 @@ async def login_user(request: LoginRequest,conn=Depends(get_db_connection)):
 
     cursor.close()
 
-    return {"message": "登录成功", "user_id": user_id, "token": user_token,"code":200}
+    return {"message": "登录成功", "user_id": user_id, "token": user_token, "code": 200}
+
 
 # 代理请求
 @app.get("/proxy")
@@ -173,23 +185,24 @@ async def proxy(url: str):
         print(f"Error occurred while fetching data: {str(e)}")
         raise HTTPException(status_code=500, detail="Error occurred while fetching data")
 
+
 # 翻译
 @app.get("/proxy/translate")
-async def proxytranslate(q:str,fromstr:str,to:str):
+async def proxytranslate(q: str, fromstr: str, to: str):
     try:
-        print("传递来的参数:",q)
+        print("传递来的参数:", q)
         formatText = q.replace(" ", "\n")
-        print("格式化query",formatText)
+        print("格式化query", formatText)
         url_encoded_text = urllib.parse.quote(formatText)
-        print("对query进行处理:",url_encoded_text)
+        print("对query进行处理:", url_encoded_text)
         signstr = f"{translateappid}{formatText}123456{translatepassword}"
-        print("签名前文本:",signstr)
+        print("签名前文本:", signstr)
         sign = get_md5_hash(signstr)
-        print("签名:",sign)
+        print("签名:", sign)
 
         # 构建目标 URL
         url = f"https://fanyi-api.baidu.com/api/trans/vip/translate?q={url_encoded_text}&from={fromstr}&to={to}&appid={translateappid}&salt=123456&sign={sign}"
-        print("发送的翻译url",url)
+        print("发送的翻译url", url)
         # 发送请求到目标 URL
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
@@ -202,9 +215,10 @@ async def proxytranslate(q:str,fromstr:str,to:str):
         print(f"Error occurred while fetching data: {str(e)}")
         raise HTTPException(status_code=500, detail="Error occurred while fetching data")
 
+
 # 英汉词典
 @app.get("/proxy/textandtext")
-async def textandtext(query:str):
+async def textandtext(query: str):
     try:
         url = f"https://apis.tianapi.com/enwords/index?key={tianapitranslatekey}&word={query}"
 
@@ -219,6 +233,7 @@ async def textandtext(query:str):
     except Exception as e:
         print(f"Error occurred while fetching data: {str(e)}")
         raise HTTPException(status_code=500, detail="Error occurred while fetching data")
+
 
 # 获取客户端的IP
 @app.get("/proxyip")
@@ -252,6 +267,7 @@ async def proxy_ip():
             "message": "ERROR"
         }
 
+
 # 来源IP查询https://apis.tianapi.com/ipquery/index
 @app.get("/proxy/nginx")
 async def proxy_ip():
@@ -284,10 +300,43 @@ async def proxy_ip():
             "message": "ERROR"
         }
 
+
 # 获取图片静态资源
+
+# 代理获取图片JSON数据
+@app.get("/proxy/randomimage")
+async def randomimage(width: int, height: int):
+    try:
+
+        url = f'https://pixabay.com/api/?key={pixabay_api_key}&min_width={width}&min_height={height}'
+
+        # 不使用代理发送请求
+        async with httpx.AsyncClient(proxies=None) as client:
+            response = await client.get(url)
+
+        # 检查请求是否成功
+        if response.status_code == 200:
+            return {
+                "code": 200,
+                "data": response.json()  # 返回 JSON 格式的数据
+            }
+        else:
+            return {
+                "code": response.status_code,
+                "message": "Failed to fetch data"
+            }
+
+    except Exception as e:
+        print(f"Error occurred while fetching data: {str(e)}")
+        return {
+            "code": 500,
+            "message": "ERROR"
+        }
+
+
 # 天气 https://devapi.qweather.com/v7/weather/24h?{查询参数}  24小时逐小时预报
 @app.get("/proxy/weather")
-async def proxy_weather(location:str):
+async def proxy_weather(location: str):
     try:
         print(f"{location}")
         url = f'https://devapi.qweather.com/v7/weather/24h?key={qweather_api_key}&location={location}'
@@ -327,6 +376,7 @@ async def get_access_token():
         else:
             raise HTTPException(status_code=500, detail="Failed to obtain access token")
 
+
 # 请求百度 AI 语言模型的接口
 @app.get("/baiduai")
 async def baidu_ai(userMessage: str):
@@ -354,10 +404,12 @@ async def baidu_ai(userMessage: str):
             if response.status_code == 200:
                 return response.json()
             else:
-                raise HTTPException(status_code=response.status_code, detail="Error communicating with the language model")
+                raise HTTPException(status_code=response.status_code,
+                                    detail="Error communicating with the language model")
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error communicating with the language model: {str(e)}")
+
 
 # 请求深度求索的模型
 @app.get("/deepseek")
@@ -373,10 +425,10 @@ async def deepseek(userMessage: str):
             stream=False
         )
         print(response.choices[0].message.content)
-        if(response != ''):
-            return {"result":response.choices[0].message.content}
+        if (response != ''):
+            return {"result": response.choices[0].message.content}
         else:
-            return {"code":404,"message":"没有返回信息"}
+            return {"code": 404, "message": "没有返回信息"}
 
     except Exception as e:
         print(f"Error occurred while fetching data: {str(e)}")

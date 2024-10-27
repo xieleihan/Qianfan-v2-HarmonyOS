@@ -1,6 +1,7 @@
 import router from '@ohos.router';
 import http from '@ohos.net.http';
 import { promptAction } from '@kit.ArkUI';
+import fs from '@ohos.file.fs';
 
 const httpRequest = http.createHttp()
 
@@ -207,10 +208,27 @@ struct Index{
           TextInput({placeholder: "请输入对话内容"})
           .width("100%")
           .height("50vp")
+            .padding({
+              left:30
+            })
           .onChange((value: string) => {
             this.inputSms = value
             this.isOpen = false
           })
+
+          Image($r('app.media.paper'))
+            .width(30)
+            .height(30)
+            .position({
+              left: 0,
+              top: "50%"
+            })
+            .translate({
+              y: "-50%"
+            })
+            .onClick(()=>{
+              console.log("文件上传")
+            })
 
           Button(){
             Image($r('app.media.send'))
@@ -401,11 +419,42 @@ struct Index{
             top: "20vp",
           })
           .onClick(()=>{
-            console.log("代理")
+            console.log("天气")
             router.pushUrl({
               url: 'pages/Weather',
               params: {
                 text: "天气"
+              }
+            },router.RouterMode.Standard)
+          })
+
+          GridItem(){
+            Column(){
+              Image($r('app.media.pic'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("随机图片")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("随机图片")
+            router.pushUrl({
+              url: 'pages/picrandom',
+              params: {
+                text: "随机图片"
               }
             },router.RouterMode.Standard)
           })

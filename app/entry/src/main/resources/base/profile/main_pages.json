@@ -9,6 +9,7 @@
     "pages/Networkinfo",
     "pages/TranslateText",
     "pages/Socks",
-    "pages/Weather"
+    "pages/Weather",
+    "pages/picrandom"
   ]
 }
