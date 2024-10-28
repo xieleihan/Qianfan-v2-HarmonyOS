@@ -517,6 +517,65 @@ struct Index{
               url: 'pages/Manga',
             })
           })
+
+          GridItem(){
+            Column(){
+              Image($r('app.media.CloudMusic'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("云音乐")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("云音乐")
+            router.pushUrl({
+              url: 'pages/Manga',
+            })
+          })
+
+          GridItem(){
+            Column(){
+              Image($r('app.media.whatapp'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("码数聊天")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("码数聊天")
+            router.pushUrl({
+              url: 'pages/Whatsapp',
+              params: {
+                text: "码数聊天"
+              }
+            },router.RouterMode.Standard)
+          })
         }
         .width("100%")
         .height("100%")

@@ -2,6 +2,8 @@
 
 export default  struct MyNavigationreturnbtn{
 
+  @Prop msgtitle:string
+
   @Builder NavigationTitle() {
     Column() {
       Text('Title')
@@ -42,7 +44,7 @@ export default  struct MyNavigationreturnbtn{
       // .title(this.NavigationTitle)
       .menus(this.NavigationMenus)
       .titleMode(NavigationTitleMode.Mini)
-      .title("这是标题")
+      .title(this.msgtitle)
       .hideBackButton(false)
     }.width('100%').height('100%').backgroundColor('#F1F3F5')
   }

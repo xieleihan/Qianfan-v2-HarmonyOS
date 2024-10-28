@@ -13,6 +13,8 @@
     "pages/picrandom",
     "pages/Bingwallpaper",
     "pages/Manga",
-    "pages/MangaDetail"
+    "pages/MangaDetail",
+    "pages/Whatsapp",
+    "pages/CloudMusic"
   ]
 }
