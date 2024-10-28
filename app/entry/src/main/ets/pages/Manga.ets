@@ -35,6 +35,7 @@ struct Manga{
     let bannerStr = await this.getHttpRequest("https://apis.netstart.cn/bcomic/Banner")
     let bannerObj:object = JSON.parse(bannerStr)
     for(let i =0;i< bannerObj?.["data"]?.length;i++){
+
       this.bannerList.push(bannerObj?.["data"][i])
     }
 
@@ -49,6 +50,12 @@ struct Manga{
     for(let i = 0; i< recommendObj?.["data"]?.["list"].length;i++){
       this.recommendList.push(recommendObj?.["data"]?.["list"][i])
     }
+  }
+
+  async onPageHide(): Promise<void> {
+    this.bannerList = []
+    this.tabClassification = []
+    this.recommendList = []
   }
 
   build() {
