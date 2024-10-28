@@ -1,5 +1,6 @@
 import MyNavigationreturnbtn from '../components/MyNavigationreturnbtn'
 import router from '@ohos.router';
+import http from '@ohos.net.http';
 
 // 定义一个路由传参类
 class routerParam{
@@ -16,6 +17,11 @@ let params = router.getParams() as routerParam
 @Component
 
 struct Whatsapp{
+
+  onPageShow(): void {
+    let httpRequest = http.createHttp()
+  }
+
   build(){
     Column(){
       MyNavigationreturnbtn({msgtitle: params.text})
