@@ -175,8 +175,68 @@ struct Bingwallpaper{
       .visibility(this.isToggle === false ? Visibility.Visible : Visibility.None)
 
       WaterFlow(){
+        ForEach(this.wallpaperList,(item:object,index:number)=>{
+          FlowItem(){
+            Column(){
+              Image(this.getImageUrl(item?.["url"]))
+                .width("100%")
+                .height(200)
+              Text(this.wallpaperList[index]?.["title"])
+                .width("100%")
+                .fontSize(16)
+                .fontWeight("bold")
+                .fontColor("#f2f2f2")
+                .position({
+                  bottom:"27%",
+                  left:10
+                })
+                .translate({
+                  y:"-50%"
+                })
+              Text(this.wallpaperList[index]?.["copyright"])
+                .width("100%")
+                .fontSize(12)
+                .fontColor("#f2f2f2")
+                .position({
+                  bottom:10,
+                  left:10
+                })
+                .padding({
+                  right:10
+                })
 
+              Image($r('app.media.download'))
+                .width(30)
+                .height(30)
+                .position({
+                  top:10,
+                  right:10
+                })
+                .onClick(()=>{
+                  console.log("点击了下载")
+                })
+            }
+            .width("100%")
+            .height(200)
+          }
+
+          .width("100%")
+          .height(200)
+          .margin({
+            bottom: 10
+          })
+        })
       }
+      .columnsTemplate("1fr 1fr")
+      .width("100%")
+      .height("70%")
+      .padding({
+        left: 20,
+        right: 20,
+      })
+      .position({
+        top: 150
+      })
       .visibility(this.isToggle === true ? Visibility.Visible : Visibility.None)
 
       Button("加载更多")

@@ -489,6 +489,34 @@ struct Index{
               }
             },router.RouterMode.Standard)
           })
+
+          GridItem(){
+            Column(){
+              Image($r('app.media.CN_bilibili'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("哔哩漫画")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("哔哩哔哩漫画")
+            router.pushUrl({
+              url: 'pages/Manga',
+            })
+          })
         }
         .width("100%")
         .height("100%")

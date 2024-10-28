@@ -11,6 +11,8 @@
     "pages/Socks",
     "pages/Weather",
     "pages/picrandom",
-    "pages/Bingwallpaper"
+    "pages/Bingwallpaper",
+    "pages/Manga",
+    "pages/MangaDetail"
   ]
 }
