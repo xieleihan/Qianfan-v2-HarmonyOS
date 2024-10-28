@@ -1,8 +1,19 @@
 import MyNavigition from '../components/MyNavigation'
 import http from '@ohos.net.http';
+import router from '@ohos.router';
 
 const httpRequest = http.createHttp()
 
+// 定义一个路由传参类
+class routerParam{
+  text: string
+
+  constructor(value:string) {
+    this.text = value
+  }
+}
+
+let params = router.getParams() as routerParam
 
 @Entry
 @Component
@@ -51,7 +62,7 @@ struct picrandom{
 
   build(){
     Column(){
-      MyNavigition({"msgtitle": "随机图片"})
+      MyNavigition({msgtitle: params.text})
 
       Image(this.picurl)
         .width(320)

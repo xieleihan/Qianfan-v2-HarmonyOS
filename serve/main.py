@@ -134,6 +134,26 @@ async def register_user(request: RegisterRequest, conn=Depends(get_db_connection
     return {"message": "注册成功", "code": 200}
 
 # 超级管理员登录
+@app.post("/private/login")
+async def login_user(request: LoginRequest, conn=Depends(get_db_connection)):
+    cursor = conn.cursor()
+
+    # 检查用户名是否存在
+    cursor.execute("SELECT id, userpassword FROM adminuser WHERE useremail = %s", (request.useremail,))
+    user = cursor.fetchone()
+    if not user:
+        raise HTTPException(status_code=400, detail="用户不存在")
+
+    user_id, hashed_password = user
+
+    # 验证密码
+    if not bcrypt.checkpw(request.userpassword.encode('utf-8'), hashed_password.encode('utf-8')):
+        raise HTTPException(status_code=400, detail="密码错误")
+
+    cursor.close()
+
+    return {"message": "登录成功", "user_id": user_id,  "code": 200}
+
 
 
 # 用户注册

@@ -10,6 +10,7 @@
     "pages/TranslateText",
     "pages/Socks",
     "pages/Weather",
-    "pages/picrandom"
+    "pages/picrandom",
+    "pages/Bingwallpaper"
   ]
 }

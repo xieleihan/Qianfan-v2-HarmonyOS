@@ -458,6 +458,37 @@ struct Index{
               }
             },router.RouterMode.Standard)
           })
+
+          GridItem(){
+            Column(){
+              Image($r('app.media.bing'))
+                .width(50)
+                .height(50)
+                .margin({
+                  bottom: "10vp"
+                })
+              Text("必应壁纸")
+            }
+          }
+          .border({
+            width:1,
+            color: "#ccc"
+          })
+          .padding({
+            left: "20vp",
+            right: "20vp",
+            bottom: "20vp",
+            top: "20vp",
+          })
+          .onClick(()=>{
+            console.log("必应壁纸")
+            router.pushUrl({
+              url: 'pages/Bingwallpaper',
+              params: {
+                text: "必应壁纸"
+              }
+            },router.RouterMode.Standard)
+          })
         }
         .width("100%")
         .height("100%")
