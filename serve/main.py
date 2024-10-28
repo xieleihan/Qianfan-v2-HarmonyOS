@@ -5,6 +5,10 @@ from dotenv import load_dotenv
 from httpx_socks import AsyncProxyTransport
 from typing import Optional
 from openai import OpenAI
+from datetime import datetime
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
 
 import httpx
 import pymysql
@@ -13,6 +17,7 @@ import logging
 import os
 import hashlib
 import urllib.parse
+import uuid
 
 
 def get_md5_hash(input_string: str) -> str:
@@ -488,3 +493,95 @@ async def deepseek(userMessage: str):
             "code": 500,
             "message": "ERROR"
         }
+
+# ---------------------------------------------------
+# ---------------- 聊天 ------------------------------
+# MySQL数据库配置
+DATABASE_URL = "mysql+pymysql://root:123456@157.122.209.70:51337/pythondb"
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+# 定义 Line 表模型
+class Line(Base):
+    __tablename__ = "line"
+
+    id = Column(Integer, primary_key=True, index=True)
+    fromuser = Column(String(100), nullable=False)
+    touser = Column(String(100), nullable=False)
+    messages = Column(Text, nullable=False)
+    sendtime = Column(DateTime, default=datetime.utcnow)
+    uuid = Column(String(200), nullable=False)
+
+Base.metadata.create_all(bind=engine)
+
+# 数据库依赖项
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+class MessageCreate(BaseModel):
+    fromuser: str
+    touser: str
+    messages: str
+
+class ChatHistoryRequest(BaseModel):
+    fromuser: str
+    touser: str
+
+class UserMessagesRequest(BaseModel):
+    touser: str
+
+@app.post("/private/send_message")
+async def send_message(message: MessageCreate, db: Session = Depends(get_db)):
+    # 生成唯一会话ID（根据fromuser和touser的组合，也可以使用现有会话ID）
+    conversation_id = str(uuid.uuid4())
+
+    # 创建并保存消息记录
+    new_message = Line(
+        fromuser=message.fromuser,
+        touser=message.touser,
+        messages=message.messages,
+        sendtime=datetime.utcnow(),
+        uuid=conversation_id
+    )
+    db.add(new_message)
+    db.commit()
+    db.refresh(new_message)
+
+    return {"message": "Message sent", "uuid": conversation_id, "data": new_message}
+
+@app.post("/private/chat_history")
+async def get_chat_history(request: ChatHistoryRequest, db: Session = Depends(get_db)):
+    chat_history = db.query(Line).filter(
+        ((Line.fromuser == request.fromuser) & (Line.touser == request.touser)) |
+        ((Line.fromuser == request.touser) & (Line.touser == request.fromuser))
+    ).order_by(Line.sendtime).all()
+
+    if not chat_history:
+        raise HTTPException(status_code=404, detail="No chat history found")
+
+    return {"data": chat_history}
+
+# 获取给特定用户发送消息的所有不同用户的记录
+@app.post("/private/user_messages")
+async def get_user_messages(request: UserMessagesRequest, db: Session = Depends(get_db)):
+    try:
+        # 查询发给指定 touser 的所有 fromuser，并按 fromuser 分组
+        query = db.query(Line.fromuser, Line.messages, Line.sendtime).filter(
+            Line.touser == request.touser
+        ).distinct(Line.fromuser).all()
+
+        # 如果没有找到记录，返回404
+        if not query:
+            raise HTTPException(status_code=404, detail="No messages found for this user")
+
+        # 将结果格式化为字典列表
+        result = [{"fromuser": record.fromuser, "message": record.messages, "sendtime": record.sendtime} for record in query]
+
+        return {"data": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error occurred: {str(e)}")
