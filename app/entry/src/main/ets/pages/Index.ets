@@ -542,7 +542,7 @@ struct Index{
           .onClick(()=>{
             console.log("云音乐")
             router.pushUrl({
-              url: 'pages/Manga',
+              url: 'pages/CloudMusic',
             })
           })
 
