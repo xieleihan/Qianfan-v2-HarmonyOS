@@ -9,6 +9,7 @@ struct CloudMusic{
   @State recommendSingList:object[] = []
   @State recommendSingList1:object[] = []
   @State recommendSingList2:object[] = []
+  @State recommendRadioList:object[] = []
 
   // 函数http请求(GET)
   async getHttpRequest(url:string):Promise<string>{
@@ -61,6 +62,13 @@ struct CloudMusic{
     for(let i = 6; i< recommendSingObj2?.["result"]?.length;i++){
       this.recommendSingList2.push(recommendSingObj2?.["result"][i])
     }
+
+    // 推荐电台
+    let recommendRadioStr = await this.getHttpRequest("https://apis.netstart.cn/music/personalized/djprogram")
+    let recommendRadioObj:object = JSON.parse(recommendRadioStr)
+    for(let i = 0; i< recommendRadioObj?.["result"]?.length;i++){
+      this.recommendRadioList.push(recommendRadioObj?.["result"][i])
+    }
   }
 
   async onPageHide(): Promise<void> {
@@ -85,253 +93,334 @@ struct CloudMusic{
         left:20,
         right:20
       })
-
-      Row(){
-        Swiper() {
-          ForEach(this.bannerList, (item: object, index: number) => {
-            Column() {
-              Image(this.bannerList[index]?.["pic"])
-                .width("100%")
+      Scroll(){
+        Column(){
+          Row(){
+            Swiper() {
+              ForEach(this.bannerList, (item: object, index: number) => {
+                Column() {
+                  Image(this.bannerList[index]?.["pic"])
+                    .width("100%")
+                }
+                .onClick(() => {
+                  console.log("点击了banner")
+                })
+              })
             }
-            .onClick(() => {
-              console.log("点击了banner")
+            .width("100%")
+            .autoPlay(true)
+            .interval(4000)
+            .loop(true)
+            .indicatorStyle({
+              "color": "#ccc",
+              "mask": true,
+              "selectedColor":"#fbc21d"
             })
+          }
+          .width("100%")
+          .height("180vp")
+          .margin({
+            top:2
           })
+
+          // 歌单
+          Row(){
+            Text("推荐歌单")
+              .fontWeight("bold")
+              .fontSize(20)
+          }.width("100%")
+          .padding({
+            left:20,
+            right:20
+          })
+          .margin({
+            bottom:10
+          })
+          Column(){
+            Scroll(){
+              Row(){
+                ForEach(this.recommendList,(item:object,index:number)=>{
+                  Row(){
+                    Image(this.recommendList[index]?.["picUrl"])
+                      .width(130)
+                      .height(130)
+                      .borderRadius(5)
+                    Text(this.recommendList[index]?.["name"])
+                      .position({
+                        bottom:0,
+                        left:0
+                      })
+                      .width("130vp")
+                      .backgroundColor("#b0000000")
+                      .maxLines(1)
+                      .textOverflow({
+                        overflow: TextOverflow.Ellipsis
+                      })
+                      .fontColor("#fff")
+                      .padding({
+                        left:5,
+                        right:5,
+                        bottom:5,
+                        top:5,
+                      })
+                  }
+                  .margin({
+                    right:10
+                  })
+                  .onClick(()=>{
+                    console.log(this.recommendList[index]?.["id"]);
+                  })
+                })
+              }
+            }.width("100%")
+            .scrollable(ScrollDirection.Horizontal)
+            .margin({
+              bottom:10
+            })
+
+          }.width("100%")
+          .padding({
+            left:20,
+            right:20
+          })
+
+          // 最新歌曲
+          Row(){
+            Text("最新歌曲")
+              .fontWeight("bold")
+              .fontSize(20)
+          }.width("100%")
+          .padding({
+            left:20,
+            right:20
+          })
+          .margin({
+            bottom:10
+          })
+          Column(){
+            Scroll(){
+              Row(){
+                Column(){
+                  ForEach(this.recommendSingList,(item:object,index:number)=>{
+                    Row(){
+                      Image(this.recommendSingList[index]?.["picUrl"])
+                        .height("80vp")
+                        .margin({
+                          right:10
+                        })
+                      Column(){
+                        Text(this.recommendSingList[index]?.["name"])
+                          .fontSize(16)
+                          .fontWeight("bold")
+                          .margin({
+                            bottom:10
+                          })
+                        Row(){
+                          ForEach(this.recommendSingList[index]?.["song"]?.["artists"],(item:object,index:number)=>{
+                            Text(item?.["name"])
+                              .fontColor("#ccc")
+                              .fontSize(14)
+                              .margin({
+                                right:10
+                              })
+                          })
+                        }
+                      }
+                      .alignItems(HorizontalAlign.Start)
+                    }
+                    .width("100%")
+                    .border({
+                      width:1,
+                      color:"#ccc"
+                    })
+                    .borderRadius(5)
+                    .margin({
+                      bottom:10
+                    })
+                    .onClick(()=>{
+                      console.log(this.recommendSingList[index]?.["song"]?.["id"]);
+                    })
+                  })
+                }.width("80%")
+                .margin({
+                  right:10
+                })
+
+                Column(){
+                  ForEach(this.recommendSingList1,(item:object,index:number)=>{
+                    Row(){
+                      Image(this.recommendSingList1[index]?.["picUrl"])
+                        .height("80vp")
+                        .margin({
+                          right:10
+                        })
+                      Column(){
+                        Text(this.recommendSingList1[index]?.["name"])
+                          .fontSize(16)
+                          .fontWeight("bold")
+                          .margin({
+                            bottom:10
+                          })
+                        Row(){
+                          ForEach(this.recommendSingList1[index]?.["song"]?.["artists"],(item:object,index:number)=>{
+                            Text(item?.["name"])
+                              .fontColor("#ccc")
+                              .fontSize(14)
+                              .margin({
+                                right:10
+                              })
+                          })
+                        }
+                      }
+                      .alignItems(HorizontalAlign.Start)
+                    }
+                    .width("100%")
+                    .border({
+                      width:1,
+                      color:"#ccc"
+                    })
+                    .borderRadius(5)
+                    .margin({
+                      bottom:10
+                    })
+                    .onClick(()=>{
+                      console.log(this.recommendSingList[index]?.["song"]?.["id"]);
+                    })
+                  })
+                }.width("80%")
+                .margin({
+                  right:10
+                })
+
+                Column(){
+                  ForEach(this.recommendSingList2,(item:object,index:number)=>{
+                    Row(){
+                      Image(this.recommendSingList2[index]?.["picUrl"])
+                        .height("80vp")
+                        .margin({
+                          right:10
+                        })
+                      Column(){
+                        Text(this.recommendSingList2[index]?.["name"])
+                          .fontSize(16)
+                          .fontWeight("bold")
+                          .margin({
+                            bottom:10
+                          })
+                        Row(){
+                          ForEach(this.recommendSingList2[index]?.["song"]?.["artists"],(item:object,index:number)=>{
+                            Text(item?.["name"])
+                              .fontColor("#ccc")
+                              .fontSize(14)
+                              .margin({
+                                right:10
+                              })
+                          })
+                        }
+                      }
+                      .alignItems(HorizontalAlign.Start)
+                    }
+                    .width("100%")
+                    .border({
+                      width:1,
+                      color:"#ccc"
+                    })
+                    .borderRadius(5)
+                    .margin({
+                      bottom:10
+                    })
+                    .onClick(()=>{
+                      console.log(this.recommendSingList[index]?.["song"]?.["id"]);
+                    })
+                  })
+                }.width("80%")
+                .margin({
+                  right:10
+                })
+              }
+              .justifyContent(FlexAlign.Start)
+            }.width("100%")
+            .scrollable(ScrollDirection.Horizontal)
+            .margin({
+              bottom:10
+            })
+
+          }.width("100%")
+          .padding({
+            left:20,
+            right:20
+          })
+
+          // 推荐电台
+          Row(){
+            Text("推荐电台")
+              .fontWeight("bold")
+              .fontSize(20)
+          }.width("100%")
+          .padding({
+            left:20,
+            right:20
+          })
+          .margin({
+            bottom:10
+          })
+          Column(){
+            Scroll(){
+              Row(){
+                ForEach(this.recommendRadioList,(item:object,index:number)=>{
+                  Row(){
+                    Image(this.recommendRadioList[index]?.["picUrl"])
+                      .width(130)
+                      .height(130)
+                      .borderRadius(5)
+                    Text(this.recommendRadioList[index]?.["name"])
+                      .position({
+                        bottom:0,
+                        left:0
+                      })
+                      .width("130vp")
+                      .backgroundColor("#b0000000")
+                      .maxLines(1)
+                      .textOverflow({
+                        overflow: TextOverflow.Ellipsis
+                      })
+                      .fontColor("#fff")
+                      .padding({
+                        left:5,
+                        right:5,
+                        bottom:5,
+                        top:5,
+                      })
+                  }
+                  .margin({
+                    right:10
+                  })
+                  .onClick(()=>{
+                    console.log(this.recommendRadioList[index]?.["id"]);
+                  })
+                })
+              }
+            }.width("100%")
+            .scrollable(ScrollDirection.Horizontal)
+            .margin({
+              bottom:10
+            })
+
+          }.width("100%")
+          .padding({
+            left:20,
+            right:20
+          })
+
         }
         .width("100%")
-        .autoPlay(true)
-        .interval(4000)
-        .loop(true)
-        .indicatorStyle({
-          "color": "#ccc",
-          "mask": true,
-          "selectedColor":"#fbc21d"
-        })
+        // .padding({
+        //   top:50,
+        //   bottom:50
+        // })
       }
       .width("100%")
-      .height("180vp")
-      .margin({
-        top:2
-      })
-
-      // 歌单
-      Row(){
-        Text("推荐歌单")
-          .fontWeight("bold")
-      }.width("100%")
-      .padding({
-        left:20,
-        right:20
-      })
-      .margin({
-        bottom:10
-      })
-      Column(){
-        Scroll(){
-          Row(){
-            ForEach(this.recommendList,(item:object,index:number)=>{
-              Row(){
-                Image(this.recommendList[index]?.["picUrl"])
-                  .width(130)
-                  .height(130)
-                  .borderRadius(5)
-                Text(this.recommendList[index]?.["name"])
-                  .position({
-                    bottom:0,
-                    left:0
-                  })
-                  .width("130vp")
-                  .backgroundColor("#b0000000")
-                  .maxLines(1)
-                  .textOverflow({
-                    overflow: TextOverflow.Ellipsis
-                  })
-                  .fontColor("#fff")
-                  .padding({
-                    left:5,
-                    right:5,
-                    bottom:5,
-                    top:5,
-                  })
-              }
-              .margin({
-                right:10
-              })
-              .onClick(()=>{
-                console.log(this.recommendList[index]?.["id"]);
-              })
-            })
-          }
-        }.width("100%")
-        .scrollable(ScrollDirection.Horizontal)
-        .margin({
-          bottom:10
-        })
-
-      }.width("100%")
-      .padding({
-        left:20,
-        right:20
-      })
-
-      // 最新歌曲
-      Row(){
-        Text("最新歌曲")
-          .fontWeight("bold")
-      }.width("100%")
-      .padding({
-        left:20,
-        right:20
-      })
-      .margin({
-        bottom:10
-      })
-      Column(){
-        Scroll(){
-          Row(){
-            Column(){
-              ForEach(this.recommendSingList,(item:object,index:number)=>{
-                Row(){
-                  Image(this.recommendSingList[index]?.["picUrl"])
-                    .height("80vp")
-                    .margin({
-                      right:10
-                    })
-                  Column(){
-                    Text(this.recommendSingList[index]?.["name"])
-                      .fontSize(16)
-                      .fontWeight("bold")
-                      .margin({
-                        bottom:10
-                      })
-                    Row(){
-                      ForEach(this.recommendSingList[index]?.["song"]?.["artists"],(item:object,index:number)=>{
-                        Text(item?.["name"])
-                          .fontColor("#ccc")
-                          .fontSize(14)
-                          .margin({
-                            right:10
-                          })
-                      })
-                    }
-                  }
-                  .alignItems(HorizontalAlign.Start)
-                }
-                .width("100%")
-                .border({
-                  width:1,
-                  color:"#ccc"
-                })
-                .borderRadius(5)
-                .margin({
-                  bottom:10
-                })
-              })
-            }.width("80%")
-            .margin({
-              right:10
-            })
-
-            Column(){
-              ForEach(this.recommendSingList1,(item:object,index:number)=>{
-                Row(){
-                  Image(this.recommendSingList1[index]?.["picUrl"])
-                    .height("80vp")
-                    .margin({
-                      right:10
-                    })
-                  Column(){
-                    Text(this.recommendSingList1[index]?.["name"])
-                      .fontSize(16)
-                      .fontWeight("bold")
-                      .margin({
-                        bottom:10
-                      })
-                    Row(){
-                      ForEach(this.recommendSingList1[index]?.["song"]?.["artists"],(item:object,index:number)=>{
-                        Text(item?.["name"])
-                          .fontColor("#ccc")
-                          .fontSize(14)
-                          .margin({
-                            right:10
-                          })
-                      })
-                    }
-                  }
-                  .alignItems(HorizontalAlign.Start)
-                }
-                .width("100%")
-                .border({
-                  width:1,
-                  color:"#ccc"
-                })
-                .borderRadius(5)
-                .margin({
-                  bottom:10
-                })
-              })
-            }.width("80%")
-            .margin({
-              right:10
-            })
-
-            Column(){
-              ForEach(this.recommendSingList2,(item:object,index:number)=>{
-                Row(){
-                  Image(this.recommendSingList2[index]?.["picUrl"])
-                    .height("80vp")
-                    .margin({
-                      right:10
-                    })
-                  Column(){
-                    Text(this.recommendSingList2[index]?.["name"])
-                      .fontSize(16)
-                      .fontWeight("bold")
-                      .margin({
-                        bottom:10
-                      })
-                    Row(){
-                      ForEach(this.recommendSingList2[index]?.["song"]?.["artists"],(item:object,index:number)=>{
-                        Text(item?.["name"])
-                          .fontColor("#ccc")
-                          .fontSize(14)
-                          .margin({
-                            right:10
-                          })
-                      })
-                    }
-                  }
-                  .alignItems(HorizontalAlign.Start)
-                }
-                .width("100%")
-                .border({
-                  width:1,
-                  color:"#ccc"
-                })
-                .borderRadius(5)
-                .margin({
-                  bottom:10
-                })
-              })
-            }.width("80%")
-            .margin({
-              right:10
-            })
-          }
-          .justifyContent(FlexAlign.Start)
-        }.width("100%")
-        .scrollable(ScrollDirection.Horizontal)
-        .margin({
-          bottom:10
-        })
-
-      }.width("100%")
-      .padding({
-        left:20,
-        right:20
-      })
+      .height("92%")
     }
-    .width("100%")
-    .height("100%")
   }
 }
