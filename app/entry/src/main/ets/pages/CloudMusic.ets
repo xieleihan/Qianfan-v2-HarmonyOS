@@ -4,31 +4,51 @@ import http from '@ohos.net.http';
 @Component
 
 struct CloudMusic{
+  @State isOpenLookSearch:boolean = false
+  @State isSearchSum:boolean = false
+  @State inputStr:string = ""
+
   @State bannerList:object[] = []
   @State recommendList:object[] = []
   @State recommendSingList:object[] = []
   @State recommendSingList1:object[] = []
   @State recommendSingList2:object[] = []
   @State recommendRadioList:object[] = []
+  @State searchList:object[] = []
 
   // 函数http请求(GET)
   async getHttpRequest(url:string):Promise<string>{
     let httpRequest = http.createHttp()
+    console.log(url)
     try {
       const res = await httpRequest.request(url, {
         method: http.RequestMethod.GET,
-        connectTimeout: 60000,
-        readTimeout: 60000,
+        connectTimeout: 600000,
+        readTimeout: 600000,
         header: {
           'Content-Type': 'application/json'
         }
       });
       let str: string = res.result as string;
+      console.log(str)
       return str;
     } catch (error) {
       console.info('error');
       return "";
     }
+  }
+
+  async getSearchList(keyword:string):Promise<void>{
+    const encodedKeyword = encodeURIComponent(keyword);
+    console.log("调用了"+`https://apis.netstart.cn/music/search?keywords=${keyword}`)
+    let url = `https://apis.netstart.cn/music/search?keywords=${encodedKeyword}`
+    let searchStr = await this.getHttpRequest(url)
+    console.log(searchStr)
+    let searchObj:object = JSON.parse(searchStr)
+    for(let i = 0; i< searchObj?.["result"]?.["songs"].length;i++){
+      this.searchList.push(searchObj?.["result"]?.["songs"][i])
+    }
+    console.log(this.searchList+"")
   }
 
   async onPageShow(): Promise<void> {
@@ -77,6 +97,8 @@ struct CloudMusic{
     this.recommendSingList = []
     this.recommendSingList1 = []
     this.recommendSingList2 = []
+    this.recommendRadioList = []
+    this.searchList = []
   }
 
   build() {
@@ -84,9 +106,21 @@ struct CloudMusic{
       Row(){
         TextInput({"placeholder":"请输入查找的音乐"})
           .width("70%")
+          .onChange((text:string)=>{
+            console.log(text)
+            this.isOpenLookSearch = true
+            this.inputStr = text
+            if(text === ""){
+              this.isOpenLookSearch = false
+            }
+          })
         Button("全站搜索")
           .backgroundColor("#fbc012")
           .fontColor("#fff")
+          .onClick(()=>{
+            this.getSearchList(this.inputStr)
+            this.isSearchSum = true
+          })
       }
       .width("100%")
       .padding({
@@ -421,6 +455,81 @@ struct CloudMusic{
       }
       .width("100%")
       .height("92%")
+      .visibility(this.isOpenLookSearch === false ? Visibility.Visible : Visibility.None)
+
+      // 搜索结果
+      Column(){
+        Column() {
+          Image($r('app.media.noSearch'))
+            .width("70%")
+            .height("200vp")
+            .margin({
+              bottom:10
+            })
+          Text("暂无搜索结果")
+            .fontSize(20)
+            .fontWeight("bold")
+        }
+        .position({
+          top:"50%",
+          left:"50%"
+        })
+        .translate({
+          x:"-50%",
+          y:"-50%"
+        })
+        .visibility(this.isSearchSum === false ? Visibility.Visible : Visibility.None)
+
+        Column(){
+          Scroll(){
+            Column(){
+              ForEach(this.searchList,(item:object,index:number)=>{
+                Row(){
+                  Image(this.searchList[index]?.["artists"][0]?.["img1v1Url"])
+                    .width(80)
+                    .height(80)
+                    .margin({
+                      right:10
+                    })
+                  Column(){
+                    Text(this.searchList[index]?.["name"])
+                      .fontSize(16)
+                      .fontWeight("bold")
+                      .margin({
+                        bottom:10
+                      })
+                      .width("200vp")
+                      .maxLines(1)
+                      .textOverflow({
+                        overflow: TextOverflow.Ellipsis
+                      })
+                    Text(this.searchList[index]?.["artists"][0]?.["name"])
+                      .fontColor("#ccc")
+                      .fontSize(14)
+                      .width("200vp")
+                  }
+                  .justifyContent(FlexAlign.Start)
+                }
+                .margin({
+                  bottom:10
+                })
+                .width("100%")
+                .justifyContent(FlexAlign.Start)
+              })
+            }
+            .width("100%")
+            .padding({
+              left:20,
+              right:20
+            })
+          }
+          .width("100%")
+          .height("100%")
+        }.visibility(this.isSearchSum === true ? Visibility.Visible : Visibility.None)
+      }
+      .width("100%")
+      .height("92%")
+      .visibility(this.isOpenLookSearch === true ? Visibility.Visible : Visibility.None)
     }
   }
 }
